@@ -1,7 +1,9 @@
+import bcrypt from "bcrypt";
 import { Request, Response } from "express";
-import { UserRepos } from "../user.repos";
 import jwt from "jsonwebtoken";
-import { SECRET_JWT } from "../../config/environments";
+import { SALT, SECRET_JWT } from "../../config/environments";
+import { UserRepos } from "../user.repos";
+
 export class CreateUserController {
   public static async execute(req: Request, res: Response) {
     try {
@@ -13,13 +15,14 @@ export class CreateUserController {
           message: "This email is at in use",
         });
       }
+      const passwordHas = await bcrypt.hash(password, SALT);
       const photoFile = "";
       const user = await repos.save({
         name,
         email,
         birthDate: dataNasc,
         isAdmin,
-        password,
+        password: passwordHas,
         photoFile,
       });
       const payLoad = {
@@ -31,7 +34,7 @@ export class CreateUserController {
       return res.status(201).json({
         message: {
           token: token,
-          message: "user created with success !!!",
+          message: user,
         },
       });
     } catch (error: any) {
