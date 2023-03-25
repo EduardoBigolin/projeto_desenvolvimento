@@ -7,6 +7,7 @@ export interface UsersDTO {
   photoFile: string;
   isAdmin: boolean;
   birthDate: string;
+  coursesId: string;
 }
 export class UserRepos {
   private prisma = new PrismaClient();

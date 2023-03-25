@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { CreateUserController } from "./controller/create-user.controller";
-import { validateUser } from "./validation/userCreate";
 import { validateUserLogin } from "./validation/userLogin";
-
+import { HomePageController } from "./controller/home-page.controller";
+import { LoginUserController } from "./controller/login-user.controller";
+import Auth from "./middleware/auth";
 const routes = Router();
 
 routes.get("/", (req, res) => {
@@ -12,7 +13,8 @@ routes.get("/", (req, res) => {
 });
 
 // Users
-routes.post("/users/create", validateUser, CreateUserController.execute);
-routes.post("/users/login", validateUserLogin, CreateUserController.execute);
-
+routes
+  .post("/users/create", Auth, CreateUserController.execute)
+  .post("/users/login", validateUserLogin, LoginUserController.execute)
+  .get("/users/", Auth, HomePageController.execute);
 export default routes;

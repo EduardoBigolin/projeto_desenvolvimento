@@ -2,8 +2,9 @@ import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { SECRET_JWT } from "../../config/environments";
+import { TokenPayLoad } from "../middleware/auth";
 import { UserRepos } from "../user.repos";
-export class CreateUserController {
+export class LoginUserController {
   public static async execute(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
@@ -14,17 +15,19 @@ export class CreateUserController {
           message: "INVALID EMAIL",
         });
       }
-      const verifyUser = await bcrypt.compare(user.password, password);
+      const verifyUser = await bcrypt.compare(password, user.password);
 
       if (!verifyUser) {
         return res.status(400).json({
           message: "INVALID PASSWORD OR EMAIL",
         });
       }
-      const payLoad = {
+      const payLoad: TokenPayLoad = {
         name: user.name,
         email: user.email,
         photoFile: user.photoFile,
+        isAdmin: user.isAdmin,
+        course: user.coursesId,
       };
       const token = jwt.sign(payLoad, SECRET_JWT);
       return res.status(201).json({
