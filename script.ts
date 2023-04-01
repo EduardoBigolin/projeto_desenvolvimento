@@ -12,52 +12,53 @@ async function main(): Promise<void> {
       email: "ADMIN@ADMIN.COM",
       birthDate: "ADMIN",
       photoFile: "ADMIN",
+      isAdmin: true,
       password: passwordHas,
       coursesId: "INFO1",
     },
   });
-  // await prisma.courses.create({
-  //   data: {
-  //     name: "informatica",
-  //     sigla: "INFO1",
-  //     year: 1,
-  //   },
-  // });
-  // await prisma.courses.create({
-  //   data: {
-  //     name: "enologia",
-  //     sigla: "ENO1",
-  //     year: 1,
-  //   },
-  // });
-  // await prisma.courses.create({
-  //   data: {
-  //     name: "informatica",
-  //     sigla: "INFO2",
-  //     year: 2,
-  //   },
-  // });
-  // await prisma.courses.create({
-  //   data: {
-  //     name: "enologia",
-  //     sigla: "ENO2",
-  //     year: 2,
-  //   },
-  // });
-  // await prisma.courses.create({
-  //   data: {
-  //     name: "agronomia",
-  //     sigla: "AGRO1",
-  //     year: 1,
-  //   },
-  // });
-  // await prisma.courses.create({
-  //   data: {
-  //     name: "agronomia",
-  //     sigla: "AGRO2",
-  //     year: 2,
-  //   },
-  // });
+  await prisma.courses.create({
+    data: {
+      name: "informatica",
+      sigla: "INFO1",
+      year: 1,
+    },
+  });
+  await prisma.courses.create({
+    data: {
+      name: "enologia",
+      sigla: "ENO1",
+      year: 1,
+    },
+  });
+  await prisma.courses.create({
+    data: {
+      name: "informatica",
+      sigla: "INFO2",
+      year: 2,
+    },
+  });
+  await prisma.courses.create({
+    data: {
+      name: "enologia",
+      sigla: "ENO2",
+      year: 2,
+    },
+  });
+  await prisma.courses.create({
+    data: {
+      name: "agronomia",
+      sigla: "AGRO1",
+      year: 1,
+    },
+  });
+  await prisma.courses.create({
+    data: {
+      name: "agronomia",
+      sigla: "AGRO2",
+      year: 2,
+    },
+  });
 }
 
 main()

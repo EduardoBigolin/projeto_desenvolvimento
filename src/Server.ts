@@ -1,6 +1,6 @@
 import express from "express";
 import routes from "./routes";
-
+import cors from "cors";
 export class Server {
   public app = express();
   public open(PORT: number) {
@@ -13,6 +13,7 @@ export class Server {
     });
   }
   public middleware() {
+    this.app.use(cors());
     this.app.use(express.json());
   }
   public routes() {

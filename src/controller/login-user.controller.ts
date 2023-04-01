@@ -8,12 +8,17 @@ export class LoginUserController {
   public static async execute(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
+      console.log(email);
+
       const repos = new UserRepos();
       const user = await repos.findByEmail(email);
       if (!user) {
         return res.status(400).json({
           message: "INVALID EMAIL",
         });
+      }
+      if (!user.inUse) {
+        throw new Error("User not found");
       }
       const verifyUser = await bcrypt.compare(password, user.password);
 

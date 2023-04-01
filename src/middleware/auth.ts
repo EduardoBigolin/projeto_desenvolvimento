@@ -15,11 +15,13 @@ function Auth(req: Request, res: Response, next: NextFunction) {
   if (authHeader) {
     const token = authHeader.split(" ")[1];
     if (!token) {
-      return res.sendStatus(401);
+      return res.status(401).json({
+        message: "TOKEN IS REQUIRED",
+      });
     }
     jwt.verify(token, SECRET_JWT as string, (err, user) => {
       if (err) {
-        return res.sendStatus(403).json({
+        return res.status(403).json({
           message: "Unauthorized",
         });
       }
@@ -27,7 +29,9 @@ function Auth(req: Request, res: Response, next: NextFunction) {
       next();
     });
   } else {
-    return res.sendStatus(401);
+    return res.status(401).json({
+      message: "Invalid Token",
+    });
   }
 }
 

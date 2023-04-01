@@ -18,6 +18,7 @@ model Users {
   coursesId    String
   Courses      Courses? @relation(fields: [coursesSigla], references: [sigla])
   coursesSigla String?
+  inUse        Boolean  @default(true)
 }
 
 model Courses {

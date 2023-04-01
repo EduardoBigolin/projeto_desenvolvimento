@@ -13,6 +13,7 @@ export class HomePageController {
         });
       }
       const returnData = {
+        userId: user.id,
         name: user.name,
         email: user.email,
         course: user.coursesId,
