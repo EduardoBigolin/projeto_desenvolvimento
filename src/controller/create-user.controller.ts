@@ -22,29 +22,42 @@ export class CreateUserController {
         });
       }
       const passwordHas = await bcrypt.hash(password, SALT);
-      const photoFile = "";
+
+      const photoFile = `http://localhost:3000/static/upload/${req.file?.filename}`;
+
+      if (!photoFile) {
+        return res.status(400).json({
+          message: "Photo is required",
+        });
+      }
 
       const user = await repos.save({
         name,
         email,
         birthDate: dataNasc,
-        isAdmin,
+        isAdmin: false,
         password: passwordHas,
         photoFile,
-        coursesId: course,
+        coursesSigla: course,
       });
       const payLoad: TokenPayLoad = {
         name: user.name,
         email: user.email,
         photoFile: user.photoFile,
         isAdmin: user.isAdmin,
-        course: user.coursesId,
       };
       const token = jwt.sign(payLoad, SECRET_JWT);
       return res.status(201).json({
         message: {
           token: token,
-          message: user,
+          message: {
+            name: user.name,
+            email: user.email,
+            birthDate: user.birthDate,
+            photoFile: user.photoFile,
+            isAdmin: user.isAdmin,
+            linkauthorized: `http://localhost:3000/api/v1/users/confirm/${user.linkAuthorized}`,
+          },
         },
       });
     } catch (error: any) {

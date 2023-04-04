@@ -15,6 +15,8 @@ export class Server {
   public middleware() {
     this.app.use(cors());
     this.app.use(express.json());
+    this.app.use("/static/upload", express.static("public/upload"));
+    this.app.use("/static", express.static("public"));
   }
   public routes() {
     this.app.use("/api/v1", routes);

@@ -7,7 +7,6 @@ export interface TokenPayLoad {
   email: string;
   photoFile: string;
   isAdmin: boolean;
-  course: string;
 }
 function Auth(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;

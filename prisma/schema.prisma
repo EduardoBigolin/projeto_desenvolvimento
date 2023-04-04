@@ -8,22 +8,38 @@ datasource db {
 }
 
 model Users {
-  id           String   @id @default(uuid())
-  name         String
-  email        String   @unique
-  password     String
-  isAdmin      Boolean  @default(false)
-  photoFile    String
-  birthDate    String
-  coursesId    String
-  Courses      Courses? @relation(fields: [coursesSigla], references: [sigla])
-  coursesSigla String?
-  inUse        Boolean  @default(true)
+  id             String   @id @default(uuid())
+  name           String
+  email          String   @unique
+  password       String
+  isAdmin        Boolean  @default(false)
+  photoFile      String
+  birthDate      String
+  Courses        Courses? @relation(fields: [coursesSigla], references: [sigla])
+  coursesSigla   String?
+  inUse          Boolean  @default(true)
+  linkAuthorized String?  @default(uuid())
 }
 
 model Courses {
-  sigla String  @id
-  name  String
-  year  Int
-  Users Users[]
+  sigla         String          @id
+  name          String
+  year          Int
+  Users         Users[]
+  lunchId       String?
+  Lunch_courses Lunch_courses[]
+}
+
+model Lunch_courses {
+  id      String  @id @default(uuid())
+  lunchId String  @unique
+  lunch   Lunch   @relation(fields: [lunchId], references: [id])
+  course  String
+  Courses Courses @relation(fields: [course], references: [sigla])
+}
+
+model Lunch {
+  id            String          @id @default(uuid())
+  dateWeek      String
+  Lunch_courses Lunch_courses[]
 }

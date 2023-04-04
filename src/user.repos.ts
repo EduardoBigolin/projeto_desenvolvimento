@@ -7,11 +7,23 @@ export interface UsersDTO {
   photoFile: string;
   isAdmin: boolean;
   birthDate: string;
-  coursesId: string;
+  coursesSigla: string;
 }
 export class UserRepos {
   private prisma = new PrismaClient();
 
+  public async listAllCourses() {
+    return this.prisma.courses.findMany();
+  }
+
+  public async confirmUser(link: string) {
+    const user = await this.prisma.users.findFirst({
+      where: {
+        linkAuthorized: link,
+      },
+    });
+    return user;
+  }
   public async save(userData: UsersDTO) {
     return await this.prisma.users.create({
       data: userData,
@@ -61,5 +73,39 @@ export class UserRepos {
         email,
       },
     });
+  }
+  public async findUserForHome(email: string) {
+    const user = await this.prisma.users.findUnique({
+      where: {
+        email,
+      },
+      include: {
+        Courses: true,
+      },
+    });
+    console.log(user);
+
+    if (!user || !user.coursesSigla) {
+      throw new Error("User not found");
+    }
+    const lunch_course = await this.prisma.lunch_courses.findMany({
+      where: {
+        course: user.coursesSigla,
+      },
+      include: {
+        lunch: true,
+      },
+    });
+
+    return {
+      userId: user.id,
+      name: user.name,
+      email: user.email,
+      course: user.Courses,
+      birthDate: user.birthDate,
+      photoFile: user.photoFile,
+      lunch: lunch_course,
+      linkAuthorized: user.linkAuthorized,
+    };
   }
 }
