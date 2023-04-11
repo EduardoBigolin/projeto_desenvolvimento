@@ -9,7 +9,7 @@ export class DeleteUserController {
       });
     }
     const repos = new UserRepos();
-    const { userId } = req.query;
+    const { userId } = req.params;
 
     try {
       await repos.deleteById(userId as string);

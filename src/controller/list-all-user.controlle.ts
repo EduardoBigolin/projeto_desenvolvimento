@@ -12,7 +12,7 @@ export class ListUserController {
     }
     try {
       const repos = new UserRepos();
-      const allUser = await repos.listAll();
+      const allUser = await repos.listAll(req.user.email);
 
       return res.status(200).json({ data: allUser });
     } catch (error) {

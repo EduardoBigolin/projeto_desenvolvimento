@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { log } from "console";
 
 export interface UsersDTO {
   name: string;
@@ -29,8 +30,13 @@ export class UserRepos {
       data: userData,
     });
   }
-  public async listAll() {
+  public async listAll(email: string) {
     return this.prisma.users.findMany({
+      where: {
+        email: {
+          not: email,
+        },
+      },
       include: {
         Courses: true,
       },
@@ -45,16 +51,6 @@ export class UserRepos {
     });
   }
   public async deleteById(id: string) {
-    const user = await this.prisma.users.findUnique({
-      where: {
-        id: id,
-      },
-    });
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
     await this.prisma.users.delete({
       where: {
         id: id,
