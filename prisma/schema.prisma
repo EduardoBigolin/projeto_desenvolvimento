@@ -27,12 +27,12 @@ model Courses {
   year          Int
   Users         Users[]
   lunchId       String?
-  Lunch_courses Lunch_courses[]
+  Lunch_courses string[]
 }
 
 model Lunch_courses {
   id      String  @id @default(uuid())
-  lunchId String  @unique
+  lunchId  unique
   lunch   Lunch   @relation(fields: [lunchId], references: [id])
   course  String
   Courses Courses @relation(fields: [course], references: [sigla])

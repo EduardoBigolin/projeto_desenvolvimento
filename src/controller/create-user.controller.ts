@@ -1,34 +1,34 @@
+// @ts-ignore
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
+// @ts-ignore
 import jwt from "jsonwebtoken";
 import { SALT, SECRET_JWT } from "../../config/environments";
 import { TokenPayLoad } from "../middleware/auth";
 import { UserRepos } from "../user.repos";
+import { unlink } from "fs";
+import {uploadImage} from "../../config/multer";
+import * as fs from "fs";
 
 export class CreateUserController {
   public static async execute(req: Request, res: Response) {
+    // @ts-ignore
     if (!req.user.isAdmin) {
-      return res.json(401).json({
-        message: "unauthorized for this function",
-      });
+      throw new Error("unauthorized for this function")
     }
     try {
-      const { name, email, password, dataNasc, isAdmin, course } = req.body;
+      const { name, email, password, dataNasc, isAdmin, course, image } = req.body;
       const repos = new UserRepos();
       const emailExist = await repos.findByEmail(email);
+      const photoFile = `http://localhost:3000/static/upload/${req.file?.filename}`;
       if (emailExist) {
-        return res.status(400).json({
-          message: "This email is at in use",
-        });
+        throw new Error("This email is in use")
       }
+
       const passwordHas = await bcrypt.hash(password, SALT);
 
-      const photoFile = `http://localhost:3000/static/upload/${req.file?.filename}`;
-
       if (!photoFile) {
-        return res.status(400).json({
-          message: "Photo is required",
-        });
+        throw new Error("Photo is required")
       }
 
       const user = await repos.save({
@@ -61,6 +61,12 @@ export class CreateUserController {
         },
       });
     } catch (error: any) {
+      if (fs.existsSync(`http://localhost:3000/static/upload/${req.file?.filename}`)) {
+        unlink(`http://localhost:3000/static/upload/${req.file?.filename}`, (err) => {
+          if (err) throw err;
+          console.log(req.file.filename)
+        });
+      }
       return res.status(400).json({
         message: error.message,
       });
